@@ -6,7 +6,6 @@ public class Location {
     private String name;
     private String description;
 
-    // například: "portal" -> Location(portal)
     private Map<String, Location> exits;
 
     private List<NPC> npcs;
