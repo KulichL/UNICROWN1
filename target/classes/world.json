@@ -1,0 +1,75 @@
+{
+  "startRoomId": "forest",
+  "rooms": [
+    {
+      "id": "forest",
+      "name": "Čarovný les",
+      "description": "Les plný magie. V dálce tušíš portál.",
+      "exits": {
+        "east": "portal"
+      }
+    },
+    {
+      "id": "portal",
+      "name": "Čarovný portál",
+      "description": "Portál pulzuje energií.",
+      "exits": {
+        "west": "forest",
+        "east": "gate"
+      }
+    },
+    {
+      "id": "gate",
+      "name": "Brána hradu Trolopolis",
+      "description": "Před branou stojí strážci.",
+      "exits": {
+        "west": "portal",
+        "east": "cave"
+      }
+    },
+    {
+      "id": "cave",
+      "name": "Jeskyně",
+      "description": "Temná jeskyně s tajnou cestou dolů.",
+      "exits": {
+        "west": "gate",
+        "south": "corridor"
+      }
+    },
+    {
+      "id": "corridor",
+      "name": "Tajná chodba",
+      "description": "Úzká chodba vedoucí pod hradem.",
+      "exits": {
+        "north": "cave",
+        "west": "library"
+      }
+    },
+    {
+      "id": "library",
+      "name": "Královská knihovna",
+      "description": "Tisíce knih. Možná tu najdeš odpověď.",
+      "exits": {
+        "east": "corridor",
+        "west": "kitchen"
+      }
+    },
+    {
+      "id": "kitchen",
+      "name": "Kuchyně",
+      "description": "Horko, kouř a královští kuchaři.",
+      "exits": {
+        "east": "library",
+        "west": "throne"
+      }
+    },
+    {
+      "id": "throne",
+      "name": "Trůnní sál",
+      "description": "Zde čeká král Cicibuk.",
+      "exits": {
+        "east": "kitchen"
+      }
+    }
+  ]
+}
