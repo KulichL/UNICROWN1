@@ -1,10 +1,20 @@
 public class CommandResult {
-    private boolean success;
-    private String message;
+    private final String message;
+    private final boolean exit;
 
-    public CommandResult(boolean success, String message) {}
+    public CommandResult(String message, boolean exit) {
+        this.message = message;
+        this.exit = exit;
+    }
 
-    public boolean isSuccess() { return false; }
+    public static CommandResult message(String msg) {
+        return new CommandResult(msg, false);
+    }
 
-    public String getMessage() { return null; }
+    public static CommandResult exit(String msg) {
+        return new CommandResult(msg, true);
+    }
+
+    public String getMessage() { return message; }
+    public boolean isExit() { return exit; }
 }

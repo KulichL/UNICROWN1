@@ -1,6 +1,9 @@
-public class KonecCommand extends Command{
-    public KonecCommand() { super("konec"); }
+public class KonecCommand implements Command {
+    @Override public String name() { return "konec"; }
+    @Override public String help() { return "konec – ukončí hru"; }
 
     @Override
-    public CommandResult execute(Game game, String[] args) { return null; }
+    public CommandResult execute(Game game, String[] args) {
+        return CommandResult.exit("Konec hry");
+    }
 }

@@ -1,9 +1,17 @@
-public class Enemy extends Character{
-    private int strength;
+public class Enemy extends Character {
+    private final int strength;
 
-    public Enemy(String name, int health, int strength) { super(name, health); }
+    public Enemy(String name, int health, int strength) {
+        super(name, health);
+        this.strength = strength;
+    }
 
-    public void attack(Player player) {}
+    public int attackDamage() {
+        return strength;
+    }
 
-    public int getStrength() { return 0; }
+    @Override
+    public String speak() {
+        return "SUIII!";
+    }
 }

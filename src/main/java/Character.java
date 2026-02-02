@@ -1,14 +1,21 @@
-public class Character {
+public abstract class Character {
     protected String name;
     protected int health;
 
-    public Character(String name, int health) {}
+    protected Character(String name, int health) {
+        this.name = name;
+        this.health = health;
+    }
 
-    public String getName() { return null; }
+    public String getName() { return name; }
+    public int getHealth() { return health; }
 
-    public int getHealth() { return 0; }
+    public boolean isAlive() { return health > 0; }
 
-    public void setHealth(int health) {}
+    public void takeDamage(int dmg) {
+        health = Math.max(0, health - dmg);
+    }
 
-    public void speak() {}
+    public abstract String speak();
 }
+

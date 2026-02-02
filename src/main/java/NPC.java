@@ -1,5 +1,13 @@
-public class NPC extends Character{
-    public NPC(String name, int health) { super(name, health); }
+public class NPC extends Character {
+    private final String hint;
 
-    public String giveHint(Game game) { return null; }
+    public NPC(String name, int health, String hint) {
+        super(name, health);
+        this.hint = hint;
+    }
+
+    @Override
+    public String speak() {
+        return hint;
+    }
 }

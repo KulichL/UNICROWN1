@@ -1,21 +1,16 @@
-public class Player {
-    private String name;
-    private int health;
-    private Inventory inventory;
+public class Player extends Character {
+    private final Inventory inventory;
 
-    public Player(String name, int health, int inventoryCapacity) {}
+    public Player(String name, int health, Inventory inventory) {
+        super(name, health);
+        this.inventory = inventory;
+    }
 
-    public void talk(NPC npc) {}
+    public Inventory getInventory() { return inventory; }
 
-    public void attack(Enemy enemy) {}
-
-    public void useItem(Item item) {}
-
-    public Inventory getInventory() { return null; }
-
-    public String getName() { return null; }
-
-    public int getHealth() { return 0; }
-
-    public void setHealth(int health) {}
+    @Override
+    public String speak() {
+        return "Jdu na to!";
+    }
 }
+

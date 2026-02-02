@@ -1,9 +1,14 @@
-public class Item {
-    protected String name;
+public abstract class Item {
+    protected final String id;
+    protected final String name;
 
-    public Item(String name) {}
+    protected Item(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-    public String getName() { return null; }
+    public String getId() { return id; }
+    public String getName() { return name; }
 
-    public CommandResult use(Game game) { return null; }
+    public abstract CommandResult use(Game game);
 }

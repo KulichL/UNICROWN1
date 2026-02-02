@@ -1,5 +1,4 @@
 import com.google.gson.Gson;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ public class JsonWorldLoader {
         System.out.println("ClassLoader: " + JsonWorldLoader.class.getClassLoader());
 
 
-        InputStream stream = getClass().getClassLoader().getResourceAsStream(resourcePath);
+        InputStream stream = JsonWorldLoader.class.getClassLoader().getResourceAsStream(resourcePath);
         if (stream == null) {
             throw new RuntimeException("Soubor " + resourcePath + " nebyl nalezen.");
         }

@@ -1,140 +1,107 @@
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
-
     private World world;
     private Room currentRoom;
+    private Player player;
 
-    private int state;
+    private final Scanner scanner = new Scanner(System.in);
+    private final CommandRegistr registry = new CommandRegistr();
 
-    private final Scanner scanner;
-    private final CommandRegistr registry;
-
-    public Game() {
-        this.scanner = new Scanner(System.in);
-        this.registry = new CommandRegistr();
-        this.state = GameState.RUNNING;
-    }
-
+    private boolean running = true;
 
     public void start() {
         initWorld();
+        initPlayer();
         initCommands();
 
-        System.out.println("Vítej ve hře UNICROWN!");
-        System.out.println("Napiš 'napoveda' pro seznam příkazů.\n");
-
+        printWelcome();
         printCurrentRoom();
 
-        while (state == GameState.RUNNING) {
+        runLoop();
+
+        System.out.println("Konec.");
+    }
+
+    private void runLoop() {
+        while (running) {
             System.out.print("> ");
             String input = scanner.nextLine().trim();
+            if (input.isEmpty()) continue;
 
-            if (input.isEmpty()) {
-                continue;
-            }
-
-            CommandResult result = processInput(input);
+            CommandResult result = handleInput(input);
 
             if (result != null && result.getMessage() != null && !result.getMessage().isEmpty()) {
                 System.out.println(result.getMessage());
             }
-        }
 
-        System.out.println("Konec.");
+            if (result != null && result.isExit()) {
+                running = false;
+            }
+        }
+    }
+
+    public CommandResult handleInput(String input) {
+        String[] parts = input.split("\\s+");
+        String cmdName = parts[0].toLowerCase();
+        String[] args = Arrays.copyOfRange(parts, 1, parts.length);
+
+        Command cmd = registry.get(cmdName);
+        if (cmd == null) {
+            return CommandResult.message("Neznámý příkaz. Napiš 'napoveda'.");
+        }
+        return cmd.execute(this, args);
+    }
+
+    private void initCommands() {
+        registry.register(new NapovedaCommand(registry));
+        registry.register(new JdiCommand());
+        registry.register(new SeberCommand());
+        registry.register(new InventarCommand());
+        registry.register(new PouzijCommand());
+        registry.register(new MluvCommand());
+        registry.register(new UtokCommand());
+        registry.register(new KonecCommand());
     }
 
     private void initWorld() {
         JsonWorldLoader loader = new JsonWorldLoader();
         this.world = loader.loadWorld("world.json");
         this.currentRoom = world.getStartRoom();
-
         if (this.currentRoom == null) {
-            throw new RuntimeException("Startovní místnost je null. Zkontroluj startRoomId v world.json.");
+            throw new RuntimeException("Startovní místnost je null. Zkontroluj startRoomId ve world.json.");
         }
     }
 
-
-
-    private void initCommands() {
-        registry.register(new JdiCommand());
-        registry.register(new KonecCommand());
-        registry.register(new NapovedaCommand());
+    private void initPlayer() {
+        this.player = new Player("Mufflin", 100, new Inventory(5));
     }
 
-
-    public CommandResult processInput(String input) {
-        String[] parts = input.split("\\s+");
-        String commandName = parts[0].toLowerCase();
-
-        String[] args = new String[Math.max(0, parts.length - 1)];
-        for (int i = 1; i < parts.length; i++) {
-            args[i - 1] = parts[i].toLowerCase();
-        }
-
-        Command cmd = registry.get(commandName);
-        if (cmd == null) {
-            return new CommandResult(false, "Neznámý příkaz. Napiš 'napoveda'.");
-        }
-
-        return cmd.execute(this, args);
+    private void printWelcome() {
+        System.out.println("Vítej ve hře UNICROWN!");
+        System.out.println("Napiš 'napoveda' pro seznam příkazů.\n");
     }
-
-    public CommandResult move(String direction) {
-        if (direction == null || direction.isEmpty()) {
-            return new CommandResult(false, "Musíš zadat směr. Např.: jdi east");
-        }
-
-        if (!currentRoom.hasExit(direction)) {
-            return new CommandResult(false, "Tímto směrem se nedá jít. Zůstáváš v: " + currentRoom.getName());
-        }
-
-        String nextId = currentRoom.getExitTargetId(direction);
-        Room nextRoom = world.getRoomById(nextId);
-
-        if (nextRoom == null) {
-            return new CommandResult(false, "Chyba světa: místnost '" + nextId + "' neexistuje.");
-        }
-
-        currentRoom = nextRoom;
-        return new CommandResult(true, buildRoomInfo());
-    }
-
 
     public void printCurrentRoom() {
-        System.out.println(buildRoomInfo());
-    }
+        System.out.println(currentRoom.getName());
+        System.out.println(currentRoom.getDescription());
 
-    private String buildRoomInfo() {
-        String exits = currentRoom.getExits().keySet().toString();
-        return "\n" +
-                currentRoom.getName() + "\n" +
-                currentRoom.getDescription() + "\n" +
-                "Východy: " + exits + "\n";
+        if (!currentRoom.getItems().isEmpty()) {
+            System.out.println("Předměty: " + currentRoom.itemsToString());
+        }
+        if (!currentRoom.getNpcs().isEmpty()) {
+            System.out.println("Postavy: " + currentRoom.npcsToString());
+        }
+        System.out.println("Východy: " + currentRoom.exitsToString());
     }
-
 
     public World getWorld() {
         return world;
     }
 
-    public Room getCurrentRoom() {
-        return currentRoom;
-    }
 
-    public void setCurrentRoom(Room room) {
-        this.currentRoom = room;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
-
-    public CommandRegistr getRegistr() {
-        return registry;
-    }
+    public Room getCurrentRoom() { return currentRoom; }
+    public void setCurrentRoom(Room room) { this.currentRoom = room; }
+    public Player getPlayer() { return player; }
+    public void stop() { this.running = false; }
 }

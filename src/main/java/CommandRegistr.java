@@ -1,11 +1,17 @@
-import java.util.Map;
+import java.util.*;
 
 public class CommandRegistr {
-    private Map<String, Command> commands;
+    private final Map<String, Command> commands = new HashMap<>();
 
-    public CommandRegistr() {}
+    public void register(Command command) {
+        commands.put(command.name().toLowerCase(), command);
+    }
 
-    public void register(Command command) {}
+    public Command get(String name) {
+        return commands.get(name.toLowerCase());
+    }
 
-    public Command get(String name) { return null; }
+    public Collection<Command> all() {
+        return commands.values();
+    }
 }

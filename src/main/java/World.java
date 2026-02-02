@@ -22,9 +22,7 @@ public class World {
             for (String targetId : room.getExits().values()) {
                 if (!rooms.containsKey(targetId)) {
                     throw new RuntimeException(
-                            "Místnost '" + room.getId() +
-                                    "' odkazuje na neexistující místnost '" + targetId + "'"
-                    );
+                            "Místnost '" + room.getId() + "' odkazuje na neexistující místnost '" + targetId + "'");
                 }
             }
         }
