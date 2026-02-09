@@ -4,6 +4,7 @@ public class UtokCommand implements Command {
 
     @Override
     public CommandResult execute(Game game, String[] args) {
-        return CommandResult.message("Nemáš na koho útočit.");
+        String target = (args.length > 0) ? args[0] : "";
+        return game.attackEnemy(target);
     }
 }

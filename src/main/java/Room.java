@@ -8,6 +8,7 @@ public class Room {
 
     private final List<Item> items = new ArrayList<>();
     private final List<NPC> npcs = new ArrayList<>();
+    private final List<Enemy> enemies = new ArrayList<>();
 
     public Room(String id, String name, String description, Map<String, String> exits) {
         this.id = id;
@@ -15,6 +16,8 @@ public class Room {
         this.description = description;
         this.exits = (exits != null) ? exits : new HashMap<>();
     }
+
+    public List<Enemy> getEnemies() { return enemies; }
 
     public String getId() { return id; }
     public String getName() { return name; }
@@ -33,12 +36,30 @@ public class Room {
         return sb.toString();
     }
 
+    public Enemy findEnemy(String token) {
+        String t = token.toLowerCase();
+        for (Enemy e : enemies) {
+            if (e.getName().toLowerCase().contains(t)) return e;
+        }
+        return null;
+    }
+
     public String npcsToString() {
         if (npcs.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
         for (NPC n : npcs) {
             if (sb.length() > 0) sb.append(", ");
             sb.append(n.getName());
+        }
+        return sb.toString();
+    }
+
+    public String enemiesToString() {
+        if (enemies.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (Enemy e : enemies) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(e.getName());
         }
         return sb.toString();
     }
