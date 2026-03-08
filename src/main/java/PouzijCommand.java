@@ -1,7 +1,35 @@
+/**
+ * Příkaz umožňující hráči použít předmět z inventáře.
+ * Hráč zadá identifikátor nebo název předmětu,
+ * který chce použít.
+ *
+ * @author Lukáš Kulich
+ */
 public class PouzijCommand implements Command {
-    @Override public String name() { return "pouzij"; }
-    @Override public String help() { return "pouzij <id/nazev> – použije předmět z inventáře"; }
 
+    /**
+     * Vrátí název příkazu používaný ve hře.
+     *
+     * @return název příkazu
+     */
+    @Override
+    public String name() { return "pouzij"; }
+
+    /**
+     * Vrátí nápovědu k příkazu.
+     *
+     * @return text nápovědy
+     */
+    @Override
+    public String help() { return "pouzij <id/nazev> – použije předmět z inventáře"; }
+
+    /**
+     * Provede příkaz pro použití předmětu z inventáře.
+     *
+     * @param game instance aktuální hry
+     * @param args argumenty příkazu (id nebo název předmětu)
+     * @return výsledek použití předmětu
+     */
     @Override
     public CommandResult execute(Game game, String[] args) {
         if (args.length < 1) return CommandResult.message("Použití: pouzij <id/nazev>");

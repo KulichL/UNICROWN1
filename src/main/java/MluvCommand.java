@@ -1,7 +1,35 @@
+/**
+ * Příkaz umožňující hráči mluvit s postavou (NPC) v aktuální místnosti.
+ * Hráč zadá jméno postavy a pokud se v místnosti nachází,
+ * zobrazí se její promluva.
+ *
+ * @author Lukáš Kulich
+ */
 public class MluvCommand implements Command {
-    @Override public String name() { return "mluv"; }
-    @Override public String help() { return "mluv <jmeno> – promluvíš s postavou"; }
 
+    /**
+     * Vrátí název příkazu používaný ve hře.
+     *
+     * @return název příkazu
+     */
+    @Override
+    public String name() { return "mluv"; }
+
+    /**
+     * Vrátí nápovědu k příkazu.
+     *
+     * @return text nápovědy
+     */
+    @Override
+    public String help() { return "mluv <jmeno> – promluvíš s postavou"; }
+
+    /**
+     * Provede příkaz pro rozhovor s NPC postavou.
+     *
+     * @param game instance aktuální hry
+     * @param args argumenty příkazu (jméno postavy)
+     * @return výsledek příkazu obsahující text promluvy NPC
+     */
     @Override
     public CommandResult execute(Game game, String[] args) {
         if (args.length < 1) return CommandResult.message("Použití: mluv <jmeno>");

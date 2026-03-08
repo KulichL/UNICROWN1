@@ -1,11 +1,9 @@
 Room.class
-GameState.class
 Character.class
 Inventory.class
 Item.class
 Command.class
 KonecCommand.class
-Location.class
 Main.class
 RoomData.class
 NPC.class

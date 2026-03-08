@@ -4,14 +4,26 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Třída zodpovědná za načtení herního světa ze souboru JSON.
+ * Pomocí knihovny Gson převede data ze souboru na objekty Room
+ * a vytvoří instanci třídy World.
+ *
+ * @author Lukáš Kulich
+ */
 public class JsonWorldLoader {
 
+    /**
+     * Načte herní svět ze zadaného JSON souboru.
+     *
+     * @param resourcePath cesta k JSON souboru v resources
+     * @return vytvořený herní svět
+     */
     public World loadWorld(String resourcePath) {
         Gson gson = new Gson();
 
         System.out.println("Hledám resource: [" + resourcePath + "]");
         System.out.println("ClassLoader: " + JsonWorldLoader.class.getClassLoader());
-
 
         InputStream stream = JsonWorldLoader.class.getClassLoader().getResourceAsStream(resourcePath);
         if (stream == null) {

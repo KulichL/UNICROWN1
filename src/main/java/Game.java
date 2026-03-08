@@ -1,5 +1,12 @@
 import java.util.*;
 
+/**
+ * Hlavní třída hry UNICROWN.
+ * Zajišťuje inicializaci světa, hráče, příkazů, herní smyčky
+ * a hlavní logiku soubojů a pohybu ve hře.
+ *
+ * @author Lukáš Kulich
+ */
 public class Game {
     private World world;
     private Room currentRoom;
@@ -11,6 +18,9 @@ public class Game {
     private boolean running = true;
     private boolean defending = false;
 
+    /**
+     * Spustí hru, inicializuje svět, hráče, příkazy a herní smyčku.
+     */
     public void start() {
         initWorld();
         initPlayer();
@@ -24,6 +34,9 @@ public class Game {
         System.out.println("Konec.");
     }
 
+    /**
+     * Přidá do místností nepřátele, NPC postavy a předměty.
+     */
     private void initActors() {
         Room forest = world.getRoomById("forest");
         Room cave = world.getRoomById("cave");
@@ -37,22 +50,32 @@ public class Game {
         if (cave != null) cave.getNpcs().add(new NPC("Cicilda", 999, "Slabina krále je kouzelný prášek z knihovny!"));
         if (gate != null) gate.getEnemies().add(new Enemy("Strážce", 30, 8));
         if (kitchen != null) kitchen.getEnemies().add(new Enemy("Kuchař", 35, 10));
-        if (throne != null) throne.getEnemies().add(new Enemy("Král Cicibuk", 80, 15));
+        if (throne != null) throne.getEnemies().add(new Enemy("Král Cicibuk", 50, 15));
 
         if (library != null) library.getItems().add(new MagicPowder());
     }
 
     private boolean kingWeakened = false;
 
+    /**
+     * Oslabí krále Cicibuka, aby mu bylo možné ubližovat.
+     */
     public void weakenKing() {
         this.kingWeakened = true;
     }
 
+    /**
+     * Zjistí, zda je král Cicibuk oslaben.
+     *
+     * @return true pokud je král oslaben, jinak false
+     */
     public boolean isKingWeakened() {
         return kingWeakened;
     }
 
-
+    /**
+     * Spustí hlavní herní smyčku a zpracovává vstup hráče.
+     */
     private void runLoop() {
         while (running) {
             System.out.print("> ");
@@ -71,6 +94,12 @@ public class Game {
         }
     }
 
+    /**
+     * Zpracuje vstup hráče, najde odpovídající příkaz a vykoná ho.
+     *
+     * @param input text zadaný hráčem
+     * @return výsledek provedení příkazu
+     */
     public CommandResult handleInput(String input) {
         String[] parts = input.split("\\s+");
         String cmdName = parts[0].toLowerCase();
@@ -83,6 +112,9 @@ public class Game {
         return cmd.execute(this, args);
     }
 
+    /**
+     * Zaregistruje všechny dostupné příkazy ve hře.
+     */
     private void initCommands() {
         registry.register(new NapovedaCommand(registry));
         registry.register(new JdiCommand());
@@ -95,6 +127,9 @@ public class Game {
         registry.register(new KonecCommand());
     }
 
+    /**
+     * Načte herní svět z JSON souboru a nastaví startovní místnost.
+     */
     private void initWorld() {
         JsonWorldLoader loader = new JsonWorldLoader();
         this.world = loader.loadWorld("world.json");
@@ -104,15 +139,28 @@ public class Game {
         }
     }
 
+    /**
+     * Inicializuje hráče s výchozím jménem, životy a inventářem.
+     */
     private void initPlayer() {
         this.player = new Player("Mufflin", 100, new Inventory(5));
     }
 
+    /**
+     * Vypíše uvítací zprávu a základní nápovědu.
+     */
     private void printWelcome() {
         System.out.println("Vítej v UNICROWNU!");
         System.out.println("Napiš 'napoveda' pro seznam příkazů.\n");
     }
 
+    /**
+     * Provede útok na nepřítele v aktuální místnosti.
+     * Zpracuje poškození nepřítele i protiútok nepřítele na hráče.
+     *
+     * @param token jméno nebo identifikátor nepřítele
+     * @return výsledek souboje
+     */
     public CommandResult attackEnemy(String token) {
         Room room = getCurrentRoom();
 
@@ -147,7 +195,12 @@ public class Game {
 
 
                 if (isKing) {
-                    return CommandResult.exit("Porazil jsi krále Cicibuka! Vítězství!");
+                    room.getItems().add(new Crown("crown"));
+
+                    sb.append("Z krále vypadla královská koruna!\n");
+                    sb.append("Seber ji a staň se vládcem království.\n");
+
+                    return CommandResult.message(sb.toString());
                 }
 
                 return CommandResult.message(sb.toString());
@@ -173,11 +226,20 @@ public class Game {
         return CommandResult.message(sb.toString());
     }
 
+    /**
+     * Nastaví, zda se hráč v aktuálním kole brání.
+     *
+     * @param defending hodnota obrany hráče
+     */
     public void setDefending(boolean defending) {
         this.defending = defending;
     }
 
-        public void printCurrentRoom() {
+    /**
+     * Vypíše informace o aktuální místnosti, jejích předmětech,
+     * nepřátelích, postavách a východech.
+     */
+    public void printCurrentRoom() {
         System.out.println(currentRoom.getName());
         System.out.println(currentRoom.getDescription());
 
@@ -193,13 +255,38 @@ public class Game {
         System.out.println("Východy: " + currentRoom.exitsToString());
     }
 
+    /**
+     * Vrátí herní svět.
+     *
+     * @return instance světa
+     */
     public World getWorld() {
         return world;
     }
 
-
+    /**
+     * Vrátí aktuální místnost hráče.
+     *
+     * @return aktuální místnost
+     */
     public Room getCurrentRoom() { return currentRoom; }
+
+    /**
+     * Nastaví aktuální místnost hráče.
+     *
+     * @param room nová aktuální místnost
+     */
     public void setCurrentRoom(Room room) { this.currentRoom = room; }
+
+    /**
+     * Vrátí hráče.
+     *
+     * @return instance hráče
+     */
     public Player getPlayer() { return player; }
+
+    /**
+     * Ukončí běh hry.
+     */
     public void stop() { this.running = false; }
 }
