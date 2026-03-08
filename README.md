@@ -43,6 +43,8 @@ konec	ukončí hru
 
 Jak hru spustit
 
+Hra je konzolová aplikace, proto je doporučeno ji spouštět z terminálu pomocí příkazu java -jar, nikoli dvojklikem na soubor .jar.
+
 Naklonujte repozitář:
 
 git clone https://github.com/KulichL/UNICROWN1
